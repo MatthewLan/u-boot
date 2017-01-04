@@ -95,7 +95,7 @@ copyex:
 	bl	cpu_init_crit
 #endif
 
-	bl	_main
+	bl	_main	/* in arch/arm/lib/crt0.S */
 
 /*------------------------------------------------------------------------------*/
 
@@ -143,7 +143,8 @@ cpu_init_crit:
 	 */
 	mov	ip, lr
 
-	bl	lowlevel_init
+	bl	lowlevel_init	/* in (eg.) board/samsung/smdk2410/lowlevel_init.S */
+						/* init SDRAM */
 	mov	lr, ip
 #endif
 	mov	pc, lr

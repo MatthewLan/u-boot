@@ -870,7 +870,7 @@ static init_fnc_t init_sequence_f[] = {
 	arch_cpu_init_dm,
 	mark_bootstage,		/* need timer, go after init dm */
 #if defined(CONFIG_BOARD_EARLY_INIT_F)
-	board_early_init_f,
+	board_early_init_f,	/* in (eg.) board/samsung/smdk2410/smdk2410.c */
 #endif
 	/* TODO: can any of this go into arch_cpu_init()? */
 #if defined(CONFIG_PPC) && !defined(CONFIG_8xx_CPUCLK_DEFAULT)
@@ -1072,10 +1072,12 @@ void board_init_f(ulong boot_flags)
 	zero_global_data();
 #endif
 
+	/* arch/arm/include/asm/global_data.h */
+	/* gd is the register 'r9' */
 	gd->flags = boot_flags;
 	gd->have_console = 0;
 
-	if (initcall_run_list(init_sequence_f))
+	if (initcall_run_list(init_sequence_f))		/* in lib/initcall.c */
 		hang();
 
 #if !defined(CONFIG_ARM) && !defined(CONFIG_SANDBOX) && \

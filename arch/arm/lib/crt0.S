@@ -90,7 +90,7 @@ ENTRY(_main)
 	bl	board_init_f_init_reserve
 
 	mov	r0, #0
-	bl	board_init_f
+	bl	board_init_f	/* in common/board_f.c */
 
 #if ! defined(CONFIG_SPL_BUILD)
 
@@ -118,7 +118,7 @@ ENTRY(_main)
 	orr	lr, #1				/* As required by Thumb-only */
 #endif
 	ldr	r0, [r9, #GD_RELOCADDR]		/* r0 = gd->relocaddr */
-	b	relocate_code
+	b	relocate_code	/* in arch/arm/lib/relocate.S */
 here:
 /*
  * now relocate vectors
