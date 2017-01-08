@@ -172,6 +172,8 @@ clbss_l:cmp	r0, r1			/* while not at end of BSS */
 	bx	lr
 #else
 	ldr	pc, =board_init_r	/* this is auto-relocated! */
+							/* in common/board_r */
+							/* the uboot second stage */
 #endif
 	/* we should not return here. */
 #endif

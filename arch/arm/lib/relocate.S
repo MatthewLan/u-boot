@@ -97,6 +97,7 @@ fixloop:
 	ldmia	r2!, {r0-r1}		/* (r0,r1) <- (SRC location,fixup) */
 	and	r1, r1, #0xff
 	cmp	r1, #23			/* relative fixup? */
+						/* #23: it is a flag */
 	bne	fixnext
 
 	/* relative fix: increase location by offset */
