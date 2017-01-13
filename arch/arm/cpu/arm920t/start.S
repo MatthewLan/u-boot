@@ -80,11 +80,29 @@ copyex:
 	str	r1, [r0]
 # endif
 
-	/* FCLK:HCLK:PCLK = 1:2:4 */
-	/* default FCLK is 120 MHz ! */
-	ldr	r0, =CLKDIVN
-	mov	r1, #3
+	/* init clock begin */
+	ldr	r0, =0x4c000014		/* CLKDIVN					*/
+	mov	r1, #0x05			/* 400MHz					*/
+							/* FCLK:HCLK:PCLK = 1:4:8, HDIVN=10, PDIVN=1	*/
 	str	r1, [r0]
+
+	/* FCKL != HCLK	*/
+	/* if HDIVN is not 0, set asynchoronous bus mode */
+	mrc	p15, 0, r1, c1, c0, 0	/* read control register		*/
+	orr	r1, r1, #0xc0000000		/* set asynchoronous bus mode	*/
+	mcr	p15, 0, r1, c1, c0, 0	/* write control register		*/
+
+	ldr	r0, =0x4c000004		/* MPLLCON								*/
+	ldr	r1, =0x5c011		/* 400MHz : (0x5c<<12)|(0x01<<4)|0x01)	*/
+							/* FCLK=400MHz, HCLK=100MHz, PCLK=50MHz	*/
+	str	r1, [r0]
+	/* init clock end */
+
+	/* setup ICACHE -> command */
+	mrc	p15, 0, r0, c1, c0, 0	/* read controller register	*/
+	orr	r0, r0, #(1<<12)
+	mcr	p15, 0, r0, c1, c0, 0	/* write back				*/
+
 #endif	/* CONFIG_S3C24X0 */
 
 	/*
