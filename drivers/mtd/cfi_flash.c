@@ -1784,7 +1784,15 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 {
 	flash_info_t *info = &flash_info[banknum];
 
+	/*
+	 * function   : board_flash_get_legacy
+	 * description: which (Legacy or CFI) to detect NOR-Flash
+	 * return     : 1-Legacy; 0-CFI
+	 * position   : board/samsung/smdk2440/smdk2440.c
+	 */
 	if (board_flash_get_legacy(base, banknum, info)) {
+		/* Will use Legacy to detect NOR-Flash. */
+
 		/* board code may have filled info completely. If not, we
 		   use JEDEC ID probing. */
 		if (!info->vendor) {
@@ -1813,6 +1821,11 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 						info->manufacturer_id,
 						info->device_id,
 						info->device_id2);
+				/*
+				 * function   : to match NOR-Flash
+				 * description: match by jedec_table
+				 * positon    : drivers/mtd/jedec_flash.c
+				 */
 				if (jedec_flash_match(info, info->start[0]))
 					break;
 				else
@@ -1835,8 +1848,14 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 		}
 		info->flash_id = FLASH_MAN_CFI;
 		return 1;
-	}
-	return 0; /* use CFI */
+	} /* if (board_flash_get_legacy(...)) */
+
+	/*
+	 * return 1 : Has used Legacy to detect NOR-FLash, no matter success or fail.
+	 *
+	 * return 0 : will use CFI to detect NOR-Flash, ignore Legacy. 
+	 */
+	return 0;
 }
 #else
 static inline int flash_detect_legacy(phys_addr_t base, int banknum)
@@ -2368,7 +2387,18 @@ unsigned long flash_init (void)
 		cfi_flash_set_config_reg(cfi_flash_bank_addr(i),
 					 cfi_flash_config_reg(i));
 
+		/*
+		 * function   : flash_detect_legacy
+		 * description: detect NOR-Flash : Legacy or CFI
+		 * Macro      : CONFIG_FLASH_CFI_LEGACY ( define in smdk2440.h )
+		 */
 		if (!flash_detect_legacy(cfi_flash_bank_addr(i), i))
+			/*
+			 * Has given up Legacy.
+			 * Will use CFI to detect NOR-Flash.
+			 *
+			 * function: flash_get_size
+			 */
 			flash_get_size(cfi_flash_bank_addr(i), i);
 		size += flash_info[i].size;
 		if (flash_info[i].flash_id == FLASH_UNKNOWN) {

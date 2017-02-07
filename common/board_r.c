@@ -377,7 +377,7 @@ static int initr_flash(void)
 	if (board_flash_wp_on())
 		printf("Uninitialized - Write Protect On\n");
 	else
-		flash_size = flash_init();
+		flash_size = flash_init();	/* in drivers/mtd/cfi_flash.c */
 
 	print_size(flash_size, "");
 #ifdef CONFIG_SYS_FLASH_CHECKSUM
@@ -842,7 +842,7 @@ init_fnc_t init_sequence_r[] = {
 #endif
 	power_init_board,
 #ifndef CONFIG_SYS_NO_FLASH
-	initr_flash,
+	initr_flash,		/* init NOR Flash */
 #endif
 	INIT_FUNC_WATCHDOG_RESET
 #if defined(CONFIG_PPC) || defined(CONFIG_M68K) || defined(CONFIG_X86) || \
@@ -854,7 +854,7 @@ init_fnc_t init_sequence_r[] = {
 	initr_spi,
 #endif
 #ifdef CONFIG_CMD_NAND
-	initr_nand,
+	initr_nand,			/* init NAND Flash */
 #endif
 #ifdef CONFIG_CMD_ONENAND
 	initr_onenand,
@@ -991,6 +991,9 @@ void board_init_r(gd_t *new_gd, ulong dest_addr)
 		init_sequence_r[i] += gd->reloc_off;
 #endif
 
+	/*
+	 * initcall_run_list() in lib/initcall.c
+	 */
 	if (initcall_run_list(init_sequence_r))
 		hang();
 

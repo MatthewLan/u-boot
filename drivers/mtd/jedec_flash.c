@@ -164,6 +164,29 @@ struct amd_flash_info {
 #define SIZE_8MiB   23
 
 static const struct amd_flash_info jedec_table[] = {
+#ifdef CONFIG_SYS_FLASH_LEGACY_1Mx16
+	{
+		/* JZ2440V3 : MX29LV160DB */
+		.mfr_id		= (u16)MX_MANUFACT,		/* C2 */
+		.dev_id		= AM29LV160DB,			/* 0x2249 */
+		.name		= "MX29LV160DB",
+		.uaddr		= {						/* unlock address -> NOR-Flash, not CPU */
+			[0] = MTD_UADDR_Ox0555_0x02AA	/* x16 */
+		},
+		.DevSize	= SIZE_2MiB,			/* Total size */
+		.CmdSet		= P_ID_AMD_STD,
+		.NumEraseRegions = 4,				/* 擦除结构的格式种类数目:
+											 * Sector Structure:
+											 *		16K*1, 8K*2, 32K*1, 64K*31
+											 */
+		.regions = {
+			ERASEINFO(16*1024, 1),
+			ERASEINFO( 8*1024, 2),
+			ERASEINFO(32*1024, 1),
+			ERASEINFO(64*1024, 31),
+		}
+	},
+#endif
 #ifdef CONFIG_SYS_FLASH_LEGACY_256Kx8
 	{
 		.mfr_id		= (u16)SST_MANUFACT,
@@ -481,6 +504,7 @@ int jedec_flash_match(flash_info_t *info, ulong base)
 	if (info->chipwidth == 1)
 		mask = 0xFF;
 
+	/* jedec_table : NOR-Flash devices list */
 	for (i = 0; i < ARRAY_SIZE(jedec_table); i++) {
 		if ((jedec_table[i].mfr_id & mask) == (info->manufacturer_id & mask) &&
 		    (jedec_table[i].dev_id & mask) == (info->device_id & mask)) {

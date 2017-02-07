@@ -150,6 +150,7 @@ here:
 	ldr	r1, =__bss_end		/* this is auto-relocated! */
 	mov	r2, #0x00000000		/* prepare zero to clear BSS */
 
+	/* clean bss section */
 clbss_l:cmp	r0, r1			/* while not at end of BSS */
 #if defined(CONFIG_CPU_V7M)
 	itt	lo

@@ -119,6 +119,11 @@
  * FLASH and environment organization
  */
 
+/* if defined, will use LEGACY to detect NOR-Flash */
+#if  0
+#define CONFIG_SYS_FLASH_LEGACY_1Mx16
+#endif
+
 #define CONFIG_SYS_FLASH_CFI
 #define CONFIG_FLASH_CFI_DRIVER
 #define CONFIG_FLASH_CFI_LEGACY
@@ -127,7 +132,7 @@
 
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
 #define CONFIG_SYS_FLASH_BANKS_LIST     { CONFIG_SYS_FLASH_BASE }
-#define CONFIG_SYS_MAX_FLASH_SECT	(19)
+#define CONFIG_SYS_MAX_FLASH_SECT	(35)		/* MX29LV160DB */
 
 #define CONFIG_ENV_ADDR			(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
