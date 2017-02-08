@@ -436,7 +436,7 @@ static int initr_spi(void)
 static int initr_nand(void)
 {
 	puts("NAND:  ");
-	nand_init();
+	nand_init();	/* in drivers/mtd/nand/nand.c */
 	return 0;
 }
 #endif

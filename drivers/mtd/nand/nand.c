@@ -83,9 +83,20 @@ static void nand_init_chip(int i)
 
 	nand->IO_ADDR_R = nand->IO_ADDR_W = (void  __iomem *)base_addr;
 
+	/*
+	 * function   : board_nand_init
+	 * description: s3c2440 NAND-Flash controller initialization;
+	 *              struct nand_chip;
+	 * position   : drivers/mtd/nand/s3c2440_nand.c
+	 */
 	if (board_nand_init(nand))
 		return;
 
+	/*
+	 * function   : nand_scan
+	 * description: scand NAND-Flash device
+	 * position   : drivers/mtd/nand/nand_base.c
+	 */
 	if (nand_scan(mtd, maxchips))
 		return;
 
@@ -139,6 +150,10 @@ void nand_init(void)
 	int i;
 
 	for (i = 0; i < CONFIG_SYS_MAX_NAND_DEVICE; i++)
+		/*
+		 * function   : nand_init_chip
+		 * description: will initialize NAND-Flash controler
+		 */
 		nand_init_chip(i);
 #endif
 
