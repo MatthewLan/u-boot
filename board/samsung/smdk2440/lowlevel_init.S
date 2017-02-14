@@ -545,6 +545,13 @@
 #define B1_BWSCON		(DW32)
 #define B2_BWSCON		(DW16)
 #define B3_BWSCON		(DW16 + WAIT + UBLB)
+
+/* DM9000
+ *
+ * 16bit
+ * no WAIT signal
+ * not using UB/LB
+ */
 #define B4_BWSCON		(DW16)
 #define B5_BWSCON		(DW16)
 #define B6_BWSCON		(DW32)
@@ -584,10 +591,15 @@
 #define B3_Tacp			0x3	/*  6clk */
 #define B3_PMC			0x0	/* normal */
 
+/*                                   
+ * DM9000C
+ * tacc = 1;    (tacc=7 -> DM9000C/E)
+ * tcoh = 1
+ */                                  
 #define B4_Tacs			0x0	/*  0clk */
 #define B4_Tcos			0x0	/*  0clk */
-#define B4_Tacc			0x7	/* 14clk */
-#define B4_Tcoh			0x0	/*  0clk */
+#define B4_Tacc			0x1	/*  2clk */
+#define B4_Tcoh			0x1	/*  1clk */
 #define B4_Tah			0x0	/*  0clk */
 #define B4_Tacp			0x0
 #define B4_PMC			0x0	/* normal */

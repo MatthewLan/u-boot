@@ -651,7 +651,7 @@ static int initr_bbmii(void)
 static int initr_net(void)
 {
 	puts("Net:   ");
-	eth_initialize();
+	eth_initialize();		/* in net/eth_legacy.c */
 #if defined(CONFIG_RESET_PHY_R)
 	debug("Reset Ethernet PHY\n");
 	reset_phy();
@@ -936,7 +936,7 @@ init_fnc_t init_sequence_r[] = {
 #endif
 #ifdef CONFIG_CMD_NET
 	INIT_FUNC_WATCHDOG_RESET
-	initr_net,
+	initr_net,		/* initialize network */
 #endif
 #ifdef CONFIG_POST
 	initr_post,

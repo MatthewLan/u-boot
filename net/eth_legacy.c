@@ -247,7 +247,7 @@ int eth_initialize(void)
 	 * If not, call a CPU-specific one
 	 */
 	if (board_eth_init != __def_eth_init) {
-		if (board_eth_init(gd->bd) < 0)
+		if (board_eth_init(gd->bd) < 0)		/* in board/samsung/smdk2440/smdk2440.c */
 			printf("Board Net Initialization Failed\n");
 	} else if (cpu_eth_init != __def_eth_init) {
 		if (cpu_eth_init(gd->bd) < 0)
