@@ -99,12 +99,13 @@ void set_default_env(const char *s)
 {
 	int flags = 0;
 
+	/* default_environment[] : in include/env_default.h */
 	if (sizeof(default_environment) > ENV_SIZE) {
 		puts("*** Error - default environment is too large\n\n");
 		return;
 	}
 
-	if (s) {
+	if (s) {	/* s = "!bad CRC" */
 		if (*s == '!') {
 			printf("*** Warning - %s, "
 				"using default environment\n\n",
@@ -117,6 +118,11 @@ void set_default_env(const char *s)
 		puts("Using default environment\n\n");
 	}
 
+	/*
+	 * function   : himport_r
+	 * description: import default_environment values
+	 * position   : lib/hashtable.c
+	 */
 	if (himport_r(&env_htab, (char *)default_environment,
 			sizeof(default_environment), '\0', flags, 0,
 			0, NULL) == 0)
@@ -252,16 +258,20 @@ int env_export(env_t *env_out)
 
 void env_relocate(void)
 {
-#if defined(CONFIG_NEEDS_MANUAL_RELOC)
+#if defined(CONFIG_NEEDS_MANUAL_RELOC)		/* define in arch/xxx/include/asm/config.h; arm has no */
 	env_reloc();
 	env_htab.change_ok += gd->reloc_off;
 #endif
 	if (gd->env_valid == 0) {
+		/*
+		 * CONFIG_ENV_IS_NOWHERE : define in include/configs/xxx.h; smdk2440 has no;
+		 * CONFIG_SPL_BUILD      : smdk2440 has no;
+		 */
 #if defined(CONFIG_ENV_IS_NOWHERE) || defined(CONFIG_SPL_BUILD)
 		/* Environment not changable */
 		set_default_env(NULL);
 #else
-		bootstage_error(BOOTSTAGE_ID_NET_CHECKSUM);
+		bootstage_error(BOOTSTAGE_ID_NET_CHECKSUM);	/* in common/bootstage.c */
 		set_default_env("!bad CRC");
 #endif
 	} else {

@@ -482,9 +482,9 @@ static int initr_dataflash(void)
  */
 static int should_load_env(void)
 {
-#ifdef CONFIG_OF_CONTROL
+#ifdef CONFIG_OF_CONTROL			/* define this Macro in configs/xxx_defconfig; smdk2440 has no */
 	return fdtdec_get_config_int(gd->fdt_blob, "load-environment", 1);
-#elif defined CONFIG_DELAY_ENVIRONMENT
+#elif defined CONFIG_DELAY_ENVIRONMENT		/* smdk2440 has no */
 	return 0;
 #else
 	return 1;
@@ -495,7 +495,7 @@ static int initr_env(void)
 {
 	/* initialize environment */
 	if (should_load_env())
-		env_relocate();
+		env_relocate();			/* in common/env_common.c */
 	else
 		set_default_env(NULL);
 #ifdef CONFIG_OF_CONTROL
@@ -567,7 +567,7 @@ static int initr_ethaddr(void)
 	bd_t *bd = gd->bd;
 
 	/* kept around for legacy kernels only ... ignore the next section */
-	eth_getenv_enetaddr("ethaddr", bd->bi_enetaddr);
+	eth_getenv_enetaddr("ethaddr", bd->bi_enetaddr);	/* in net/eth_common.c */
 #ifdef CONFIG_HAS_ETH1
 	eth_getenv_enetaddr("eth1addr", bd->bi_enet1addr);
 #endif
@@ -865,7 +865,7 @@ init_fnc_t init_sequence_r[] = {
 #ifdef CONFIG_HAS_DATAFLASH
 	initr_dataflash,
 #endif
-	initr_env,
+	initr_env,			/* init environemnt */
 #ifdef CONFIG_SYS_BOOTPARAMS_LEN
 	initr_malloc_bootparams,
 #endif
@@ -912,7 +912,7 @@ init_fnc_t init_sequence_r[] = {
 #endif
 	/* PPC has a udelay(20) here dating from 2002. Why? */
 #ifdef CONFIG_CMD_NET
-	initr_ethaddr,
+	initr_ethaddr,		/* to get eth address (MAC) */
 #endif
 #ifdef CONFIG_BOARD_LATE_INIT
 	board_late_init,
