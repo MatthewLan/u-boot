@@ -60,34 +60,38 @@
  * USB support (currently only works with D-cache off)
  ************************************************************/
 /* Some Macros are defined in configs/smdk2440_defconfig */
-#ifndef CONFIG_USER_CUT
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_USB_OHCI
 #define CONFIG_USB_OHCI_S3C24XX
 #define CONFIG_DOS_PARTITION
-#endif
+#endif							/* --- not CONFIG_USER_CUT --- */
 
 /************************************************************
  * RTC
  ************************************************************/
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_RTC_S3C24X0
+#endif							/* --- not CONFIG_USER_CUT --- */
 
 #define CONFIG_BAUDRATE			115200
 
 /*
  * BOOTP options
  */
-#ifndef CONFIG_USER_CUT
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_BOOTP_BOOTFILESIZE
 #define CONFIG_BOOTP_BOOTPATH
 #define CONFIG_BOOTP_GATEWAY
 #define CONFIG_BOOTP_HOSTNAME
-#endif
+#endif							/* --- not CONFIG_USER_CUT --- */
 
 /*
  * Command line configuration.
  */
 #define CONFIG_CMD_BSP
-#define CONFIG_CMD_DATE
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#define CONFIG_CMD_DATE			/* RTC */
+#endif							/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_REGINFO
 
@@ -185,14 +189,14 @@
  * File system
  */
 /* Some Macros are defined in configs/smdk2440_defconfig */
-#ifndef CONFIG_USER_CUT
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_CMD_UBIFS
 #define CONFIG_CMD_MTDPARTS
 #define CONFIG_MTD_DEVICE
 #define CONFIG_MTD_PARTITIONS
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
-#endif
+#endif							/* --- not CONFIG_USER_CUT --- */
 
 /* additions for new relocation code, must be added to all boards */
 #define CONFIG_SYS_SDRAM_BASE				PHYS_SDRAM_1
