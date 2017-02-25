@@ -204,9 +204,41 @@
 /* Some Macros are defined in configs/smdk2440_defconfig */
 #ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_CMD_UBIFS
+#endif							/* --- not CONFIG_USER_CUT --- */
+
+#define CONFIG_MTD_ENABLE
+#ifdef  CONFIG_MTD_ENABLE		/* --- CONFIG_MTD_ENABLE */
+								/* --- cmd: mtdparts --- */
+/* in cmd/Makefile */
 #define CONFIG_CMD_MTDPARTS
+/* in drivers/mtd/Makefile */
 #define CONFIG_MTD_DEVICE
-#define CONFIG_MTD_PARTITIONS
+/* in drivers/mtd/Makefile */
+/* #define CONFIG_MTD_PARTITIONS */
+
+#define MTDIDS_DEFAULT				"nand0=smdk2440-0"	/* device */
+/* need match with linux-kernel */
+/* last part : has no ',' */
+#define MTDPARTS_DEFAULT			"mtdparts=smdk2440-0:512k(u-boot),"  \
+									"128k(params)," \
+									"2m(kernel)," \
+									"-(rootfs)"
+/*******************************************************************
+ #: name                size            offset          mask_flags
+ 0: u-boot              0x00080000      0x00000000      0
+ 1: params              0x00020000      0x00080000      0
+ 2: kernel              0x00200000      0x000a0000      0
+ 3: rootfs              0x0fd60000      0x002a0000      0
+ ******************************************************************/
+								/* --- cmd: mtdparts --- */
+
+#if 0
+#define CONFIG_BOOTARGS			"console=ttySAC0 root=/dev/mtdblock3 rootfstype=jffs2"
+#define CONFIG_BOOTCOMMAND		"nand read 30000000 kernel;bootm 30000000"
+#endif
+#endif							/* --- CONFIG_MTD_ENABLE */ 
+
+#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
 #endif							/* --- not CONFIG_USER_CUT --- */
