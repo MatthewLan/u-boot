@@ -160,11 +160,24 @@
 #define CONFIG_SYS_FLASH_BANKS_LIST			{ CONFIG_SYS_FLASH_BASE }
 #define CONFIG_SYS_MAX_FLASH_SECT			(35)						/* MX29LV160DB */
 
+#if 0							/* --- in NOR Flash --- */
 #define CONFIG_ENV_ADDR						(CONFIG_SYS_FLASH_BASE + 0x070000)
 #define CONFIG_ENV_IS_IN_FLASH
 #define CONFIG_ENV_SIZE						0x10000
 /* allow to overwrite serial and ethaddr */
 #define CONFIG_ENV_OVERWRITE
+#endif							/* --- in NOR Flash --- */
+
+/*
+ * 1. common/Makefile
+ * 2. saveenv(): in common/env_nand.c
+ */
+#if 1							/* --- in NAND Flash --- */
+#define CONFIG_ENV_IS_IN_NAND
+#define CONFIG_ENV_OFFSET					0x00040000
+#define CONFIG_ENV_SIZE						0x20000			/* NAND Flash 块大小(128K)的倍数 */
+#define CONFIG_ENV_RANGE					CONFIG_ENV_SIZE	/* 擦除的块大小 */
+#endif							/* --- in NAND Flash --- */
 
 /*
  * Size of malloc() pool
