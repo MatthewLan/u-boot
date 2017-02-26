@@ -238,6 +238,22 @@
 #endif
 #endif							/* --- CONFIG_CMD_MTDPARTS --- */ 
 
+/* support jffs2 */
+#ifdef  CONFIG_CMD_NAND			/* --- CONFIG_CMD_NAND --- */
+
+#define CONFIG_CMD_JFFS2
+#ifdef  CONFIG_CMD_JFFS2		/* --- CONFIG_CMD_JFFS2 --- */
+#define CONFIG_JFFS2_DEV			"nand0"
+#define CONFIG_JFFS2_NAND
+
+#if 0	/* use default val */
+#define CONFIG_JFFS2_PART_OFFSET	0x00000000	/* default */
+#define CONFIG_JFFS2_PART_SIZE		0xFFFFFFFF	/* default */
+#endif
+#endif							/* --- CONFIG_CMD_JFFS2 --- */
+#endif							/* --- CONFIG_CMD_NAND --- */
+
+
 #if 0
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
