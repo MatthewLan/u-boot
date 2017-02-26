@@ -997,9 +997,9 @@ void board_init_r(gd_t *new_gd, ulong dest_addr)
 	if (initcall_run_list(init_sequence_r))
 		hang();
 
-#ifdef CONFIG_MTD_ENABLE
+#ifdef CONFIG_CMD_MTDPARTS			/* --- CONFIG_CMD_MTDPARTS --- */
 	run_command("mtdparts default", 0);
-#endif
+#endif								/* --- CONFIG_CMD_MTDPARTS --- */
 
 	/* NOTREACHED - run_main_loop() does not return */
 	hang();

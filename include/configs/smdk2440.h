@@ -15,8 +15,6 @@
 #define CONFIG_S3C2440						/* specifically a SAMSUNG S3C2440 SoC */
 #define CONFIG_SMDK2440						/* on a SAMSUNG SMDK2440 Board */
 
-#define CONFIG_USER_CUT						/* to cut out the useless codes */
-
 #define CONFIG_SYS_TEXT_BASE	0x0
 
 #define CONFIG_SYS_ARM_CACHE_WRITETHROUGH
@@ -60,38 +58,40 @@
  * USB support (currently only works with D-cache off)
  ************************************************************/
 /* Some Macros are defined in configs/smdk2440_defconfig */
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#ifdef  CONFIG_USB				/* --- CONFIG_USB --- */
 #define CONFIG_USB_OHCI
 #define CONFIG_USB_OHCI_S3C24XX
 #define CONFIG_DOS_PARTITION
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif							/* --- CONFIG_USB --- */
 
 /************************************************************
  * RTC
  ************************************************************/
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#if 0
 #define CONFIG_RTC_S3C24X0
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif
 
 #define CONFIG_BAUDRATE			115200
 
 /*
  * BOOTP options
  */
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#if 0
 #define CONFIG_BOOTP_BOOTFILESIZE
 #define CONFIG_BOOTP_BOOTPATH
 #define CONFIG_BOOTP_GATEWAY
 #define CONFIG_BOOTP_HOSTNAME
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif
 
 /*
  * Command line configuration.
  */
 #define CONFIG_CMD_BSP
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+
+#ifdef  CONFIG_RTC_S3C24X0		/* --- CONFIG_RTC_S3C24X0 --- */
 #define CONFIG_CMD_DATE			/* RTC */
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif							/* --- CONFIG_RTC_S3C24X0 --- */
+
 #define CONFIG_CMD_NAND
 #define CONFIG_CMD_REGINFO
 
@@ -139,7 +139,7 @@
 
 #define PHYS_FLASH_1				0x00000000		/* Flash Bank #0 */
 
-#define CONFIG_SYS_FLASH_BASE	PHYS_FLASH_1
+#define CONFIG_SYS_FLASH_BASE		PHYS_FLASH_1
 
 /*-----------------------------------------------------------------------
  * FLASH and environment organization
@@ -191,7 +191,7 @@
 /*
  * NAND configuration
  */
-#ifdef CONFIG_CMD_NAND
+#ifdef  CONFIG_CMD_NAND
 #define CONFIG_NAND_S3C2440
 #define CONFIG_SYS_S3C2440_NAND_HWECC
 #define CONFIG_SYS_MAX_NAND_DEVICE			1
@@ -202,15 +202,15 @@
  * File system
  */
 /* Some Macros are defined in configs/smdk2440_defconfig */
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#ifdef  CONFIG_CMD_UBI			/* --- CONFIG_CMD_UBI --- */
 #define CONFIG_CMD_UBIFS
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif							/* --- CONFIG_CMD_UBI --- */
 
-#define CONFIG_MTD_ENABLE
-#ifdef  CONFIG_MTD_ENABLE		/* --- CONFIG_MTD_ENABLE */
-								/* --- cmd: mtdparts --- */
+
 /* in cmd/Makefile */
 #define CONFIG_CMD_MTDPARTS
+#ifdef  CONFIG_CMD_MTDPARTS		/* --- CONFIG_CMD_MTDPARTS --- */
+								/* --- cmd: mtdparts --- */
 /* in drivers/mtd/Makefile */
 #define CONFIG_MTD_DEVICE
 /* in drivers/mtd/Makefile */
@@ -236,12 +236,12 @@
 #define CONFIG_BOOTARGS			"console=ttySAC0 root=/dev/mtdblock3 rootfstype=jffs2"
 #define CONFIG_BOOTCOMMAND		"nand read 30000000 kernel;bootm 30000000"
 #endif
-#endif							/* --- CONFIG_MTD_ENABLE */ 
+#endif							/* --- CONFIG_CMD_MTDPARTS --- */ 
 
-#ifndef CONFIG_USER_CUT			/* --- not CONFIG_USER_CUT --- */
+#if 0
 #define CONFIG_YAFFS2
 #define CONFIG_RBTREE
-#endif							/* --- not CONFIG_USER_CUT --- */
+#endif
 
 /* additions for new relocation code, must be added to all boards */
 #define CONFIG_SYS_SDRAM_BASE				PHYS_SDRAM_1
