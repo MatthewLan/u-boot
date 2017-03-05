@@ -253,9 +253,9 @@
 #endif							/* --- CONFIG_CMD_JFFS2 --- */
 #endif							/* --- CONFIG_CMD_NAND --- */
 
+#define CONFIG_YAFFS2
 
 #if 0
-#define CONFIG_YAFFS2
 #define CONFIG_RBTREE
 #endif
 

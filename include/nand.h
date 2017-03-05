@@ -101,6 +101,7 @@ typedef struct nand_erase_options nand_erase_options_t;
 int nand_read_skip_bad(struct mtd_info *mtd, loff_t offset, size_t *length,
 		       size_t *actual, loff_t lim, u_char *buffer);
 
+#define WITH_YAFFS_OOB	(1 << 0)
 #define WITH_DROP_FFS	(1 << 0) /* drop trailing all-0xff pages */
 #define WITH_WR_VERIFY	(1 << 1) /* verify data was written correctly */
 

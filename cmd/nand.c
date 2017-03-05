@@ -613,6 +613,15 @@ static int do_nand(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 							  NULL, maxsize,
 							  (u_char *)addr,
 							  WITH_WR_VERIFY);
+#ifdef CONFIG_YAFFS2		/* --- CONFIG_YAFFS2 --- */
+		} else if (!strcmp(s, ".yaffs")) {
+			if (read) {
+				printf("Unknown nand command suffix '%s'\n", s);
+				return 1;
+			}
+			ret = nand_write_skip_bad(mtd, off, &rwsize, NULL,
+					maxsize, (u_char *)addr, WITH_YAFFS_OOB);
+#endif						/* --- CONFIG_YAFFS2 --- */
 #ifdef CONFIG_CMD_NAND_TRIMFFS
 		} else if (!strcmp(s, ".trimffs")) {
 			if (read) {
@@ -792,6 +801,11 @@ static char nand_help_text[] =
 	"nand read.raw - addr off|partition [count]\n"
 	"nand write.raw[.noverify] - addr off|partition [count]\n"
 	"    Use read.raw/write.raw to avoid ECC and access the flash as-is.\n"
+#ifdef CONFIG_YAFFS2		/* --- CONFIG_YAFFS2 --- */
+	"nann write.yaffs - addr off|partition size\n]"
+	"	write yaffs format, 'size' bytes starting at offset 'off' from memory address\n"
+	"    'addr', skipping bad blocks.\n"
+#endif						/* --- CONFIG_YAFFS2 --- */
 #ifdef CONFIG_CMD_NAND_TRIMFFS
 	"nand write.trimffs - addr off|partition size\n"
 	"    write 'size' bytes starting at offset 'off' from memory address\n"

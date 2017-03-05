@@ -581,6 +581,19 @@ int nand_write_skip_bad(struct mtd_info *mtd, loff_t offset, size_t *length,
 	if (actual)
 		*actual = 0;
 
+#ifdef CONFIG_YAFFS2		/* --- CONFIG_YAFFS2 --- */
+	if (WITH_YAFFS_OOB & flags) {
+		if ((~WITH_YAFFS_OOB) & flags)
+			return -EINVAL;
+
+		int pages = mtd->erasesize / mtd->writesize;
+		blocksize = pages * mtd->oobsize + mtd->erasesize;
+		if (*length % (mtd->oobsize + mtd->writesize)) {
+			printf("Attempt to write incomplete page in yaffs mode.\n");
+			return -EINVAL;
+		}
+	} else
+#endif						/* --- CONFIG_YAFFS2 --- */
 	blocksize = mtd->erasesize;
 
 	/*
@@ -650,6 +663,34 @@ int nand_write_skip_bad(struct mtd_info *mtd, loff_t offset, size_t *length,
 		else
 			write_size = blocksize - block_offset;
 
+#ifdef CONFIG_YAFFS2	/* --- CONFIG_YAFFS2 --- */
+		if (WITH_YAFFS_OOB & flags) {
+			size_t pagesize_and_oob = mtd->writesize + mtd->oobsize;
+			int pages = write_size / pagesize_and_oob;
+			struct mtd_oob_ops ops;
+
+			ops.len     = mtd->writesize;
+			ops.ooblen  = mtd->oobsize;
+			ops.mode    = MTD_OPS_RAW;
+			ops.ooboffs = 0;
+
+			int index = 0;
+			for (; index < pages; index++) {
+				WATCHDOG_RESET();
+
+				ops.datbuf = p_buffer;
+				ops.oobbuf = ops.datbuf + mtd->writesize;
+
+				rval = mtd->_write_oob(mtd, offset, &ops);
+				if (0 != rval)
+					break;
+
+				offset += mtd->writesize;
+				p_buffer += pagesize_and_oob;
+			}
+		} else
+#endif					/* --- CONFIG_YAFFS2 --- */
+		{	/* else(WITH_YAFFS_OOB) --- CONFIG_YAFFS2 */
 		truncated_write_size = write_size;
 #ifdef CONFIG_CMD_NAND_TRIMFFS
 		if (flags & WITH_DROP_FFS)
@@ -666,6 +707,8 @@ int nand_write_skip_bad(struct mtd_info *mtd, loff_t offset, size_t *length,
 
 		offset += write_size;
 		p_buffer += write_size;
+
+		}	/* else(WITH_YAFFS_OOB) --- CONFIG_YAFFS2 */
 
 		if (rval != 0) {
 			printf("NAND write to offset %llx failed %d\n",
